@@ -4,25 +4,19 @@ import java.sql.*;
 
 public class DBDemo {
     public static void main(String[] args) throws SQLException {
-        String jdbcURL = "jdbc:mysql://localhost:3306/payroll_service?useSSL=false";
-        String userName = "root";
-        String passWord = "July@135";
+
+        System.out.println("Welcome to Employee Payroll program on JDBC");
         Connection connection = null;
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            System.out.println("Driver loaded!");
-            System.out.println("Connecting to database :" + jdbcURL);
-            connection = DriverManager.getConnection(jdbcURL, userName, passWord);
-            System.out.println("Connection is successful!!!!" + connection);
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/payroll_service", "root", "July@135");
+            System.out.println("Connection done.....");
             Statement statement = connection.createStatement();
-            statement.execute("update payroll_service.employee_details set salary = 300000 where  name = 'Jitesh'");
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM payroll_service.employee_details");
-            System.out.println("Update employee data from database :");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM employee_payroll WHERE start BETWEEN cast('2019-01-01' as DATE) and DATE (NOW())");
             while (resultSet.next()) {
-                System.out.println(resultSet.getInt("id") + " " + resultSet.getString("name") + " " + resultSet.getDouble("salary") + " " + resultSet.getDate("start"));
+                System.out.println(resultSet.getString("name") + " " + resultSet.getDate("start"));
             }
-        } catch (Exception exception) {
-            System.out.println(exception.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             connection.close();
         }
